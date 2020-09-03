@@ -1,4 +1,5 @@
 import os
+import logging
 
 import requests
 import telegram
@@ -15,6 +16,8 @@ headers = {
 
 check_list_url = 'https://dvmn.org/api/long_polling/'
 payload = {}
+
+logging.info('Devman notifications bot started.')
 
 while True:
     try:
