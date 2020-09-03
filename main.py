@@ -6,7 +6,7 @@ import telegram
 
 
 telegram_token = os.getenv("TELEGRAM_TOKEN")
-chat_id = 105427506
+chat_id = os.getenv("CHAT_ID")
 
 
 class LogsToTelegramHandler(logging.Handler):
