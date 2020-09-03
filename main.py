@@ -4,11 +4,30 @@ import logging
 import requests
 import telegram
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 telegram_token = os.getenv("TELEGRAM_TOKEN")
 chat_id = 105427506
+
+
+class LogsToTelegramHandler(logging.Handler):
+    """Обработчик логов, который шлет их в телеграм канал."""
+    def __init__(self):
+        super().__init__()
+        log_bot = telegram.Bot(token=telegram_token)
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        bot.send_message(
+          chat_id=chat_id, text=log_entry,
+          parse_mode=telegram.ParseMode.HTML,
+          disable_web_page_preview=True
+        )
+
+logger = logging.getLogger("devman_notifications_bot")
+logger.setLevel(logging.INFO)
+logger.addHandler(LogsToTelegramHandler())
+
+
 bot = telegram.Bot(token=telegram_token)
 
 devman_token = os.getenv("DEVMAN_TOKEN")
@@ -19,7 +38,7 @@ headers = {
 check_list_url = 'https://dvmn.org/api/long_polling/'
 payload = {}
 
-logging.info('Devman notifications bot started.')
+logger.info('Devman notifications bot started.')
 
 while True:
     try:
