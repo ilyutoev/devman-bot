@@ -4,6 +4,8 @@ import logging
 import requests
 import telegram
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 telegram_token = os.getenv("TELEGRAM_TOKEN")
 chat_id = 105427506
