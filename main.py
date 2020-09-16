@@ -53,7 +53,7 @@ def main():
                 logger.error('Ошибка получения данных с dvmn.org.')
                 logger.exception(e)
                 connect_attempts += 1
-                if connect_attempts > 5
+                if connect_attempts > 5:
                     time.sleep(60)
                     connect_attempts = 0
 
