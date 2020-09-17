@@ -21,7 +21,6 @@ class LogsToTelegramHandler(logging.Handler):
         )
 
 logger = logging.getLogger("devman_notifications_bot")
-logger.setLevel(logging.INFO)
 
 
 def main():
@@ -29,6 +28,7 @@ def main():
     chat_id = os.getenv("TG_CHAT_ID")
     devman_token = os.getenv("DEVMAN_TOKEN")
 
+    logger.setLevel(logging.INFO)
     logger.addHandler(LogsToTelegramHandler(telegram_token, chat_id))
 
     bot = telegram.Bot(token=telegram_token)
@@ -49,13 +49,15 @@ def main():
             try:
                 response = requests.get(check_list_url, headers=headers, params=payload, timeout=100)
                 response.raise_for_status()
-            except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as e:
+            except requests.exceptions.ConnectionError as e:
                 logger.error('Ошибка получения данных с dvmn.org.')
                 logger.exception(e)
                 connect_attempts += 1
                 if connect_attempts > 5:
                     time.sleep(60)
                     connect_attempts = 0
+            except requests.exceptions.ReadTimeout:
+                continue
 
             response_dict = response.json()
             status = response_dict.get('status')
